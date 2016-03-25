@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+  <!-- Use correct character set. -->
+  <meta charset="utf-8">
+
+  <!-- Tell IE to use the latest, best version. -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <!-- Make the application on mobile take up the full browser screen and disable user scaling. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+
+  <title>ODU Geo-Vis: Intl. Students</title>
+
+  <script src="../Build/Cesium/Cesium.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+
+  <style>
+
+      @import url(../Build/Cesium/Widgets/widgets.css);
+
+      html, body, #cesiumContainer {
+          width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+      }
+
+  </style>
+
+</head>
+
+<body>
+
+  <div id="cesiumContainer"></div>
+  <div id="loadingOverlay"><h1>Loading...</h1></div>
+  <div id="toolbar"></div>
+
+  <script type = "text/javascript">
+
+
+    var viewer = new Cesium.Viewer('cesiumContainer', {
+      baseLayerPicker : false,
+      timeline : false,
+      skyAtsmophere : false,
+      globe : false
+    });
+
+
+    var promise = Cesium.GeoJsonDataSource.load('../Datasets/CountriesShapefileConversion.json');
+
+    promise.then(function(dataSource) {
+
+      viewer.dataSources.add(dataSource); 
+
+        
+
+        //Get the array of entities
+        var entities = dataSource.entities.values;
+
+
+
+        
+
+
+        for (var i = 0; i < entities.length; i++) {
+
+          var entity = entities[i];
+
+          var name = entity.ISO3;
+
+          
+
+          
+            
+
+              if (entity.properties.Students_2 == 0) {
+
+                  color = Cesium.Color.fromBytes(105,105,105);
+                  height = 40000;
+
+                  } else if (entity.properties.Students_2 > 0 && entity.properties.Students_2 <= 2) {
+
+                      color = Cesium.Color.fromCssColorString('#808080');
+                      
+
+                  } else if (entity.properties.Students_2 > 2 && entity.properties.Students_2 <= 6) {
+
+                      color = Cesium.Color.fromCssColorString('#768088');
+                      
+                  
+                  } else if (entity.properties.Students_2 > 7 && entity.properties.Students_2 <= 10) {
+
+                      color = Cesium.Color.fromCssColorString('#6C8091');
+                      
+                  
+                  } else if (entity.properties.Students_2 > 11 && entity.properties.Students_2 <= 15) {
+
+                      color = Cesium.Color.fromCssColorString('#63819A');
+                      
+                  
+                  } else if (entity.properties.Students_2 > 16 && entity.properties.Students_2 <= 38) {
+
+                      color = Cesium.Color.fromCssColorString('#5981A2');
+                      
+                  
+                  } else if (entity.properties.Students_2 > 38 && entity.properties.Students_2 <= 86) {
+
+                      color = Cesium.Color.fromCssColorString('#4F81AB');
+                      
+                  
+                  } else {
+                      color = Cesium.Color.fromCssColorString('#4682B4');
+                      
+                  
+                }
+
+
+              if (entity.properties.Students_2 == 0) {
+
+                height = 50000;
+
+              } else { 
+
+                height = 50000 + ((entity.properties.Students_2 / 155) * 950000);
+              } 
+
+          entity.polygon.material = color;
+
+
+          //Remove the outlines.
+          entity.polygon.outline = false;
+          
+          entity.polygon.extrudedHeight = height;
+
+          entity.label
+
+        }
+          
+          
+          
+
+            
+        
+    });
+
+  </script>
+
+
+</body>
+
+</html>
